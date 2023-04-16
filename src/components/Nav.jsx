@@ -14,13 +14,13 @@ function Nav(props) {
     );
   });
   return (
-    <nav className="navbar navbar-expand-lg bg-light">
-      <div className="container">
+    <div className="container">
+      <nav className="navbar px-3 py-1 navbar-expand-lg bg-light">
         <a className="navbar-brand" href="/">
           Realestates
         </a>
         <button
-          className="navbar-toggler"
+          className="navbar-toggler p-0"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
@@ -33,8 +33,8 @@ function Nav(props) {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">{navList}</ul>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
 

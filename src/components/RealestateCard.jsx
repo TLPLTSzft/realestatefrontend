@@ -20,9 +20,10 @@ function RealestateCard(props) {
             <h3 className="col-5 ps-0 text-end">{realestate_code}</h3>
           </div>
           <img
-            src="01.jpg"
-            alt="01.jpg"
-            title="01"
+            src={`image/${id}.jpg`}
+            alt={`${id}.jpg`}
+            title={`${id}`}
+            // src="https://loremflickr.com/640/480/building?random=10"
             className="img-fluid  px-0 py-2"
           />
         </div>
@@ -40,6 +41,10 @@ function RealestateCard(props) {
               <tr>
                 <th>Furnishing</th>
                 <td>{furnishing}</td>
+                {/* <td>
+                  @if ({furnishing}==1)<p>egy</p>@else<p>harom</p>
+                  @endif
+                </td> */}
               </tr>
               <tr>
                 <th>Rental fee</th>
