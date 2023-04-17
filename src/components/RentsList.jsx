@@ -1,6 +1,6 @@
 function RentsList(props) {
   return (
-    <section id="rentslist">
+    <section id="rentsList">
       <h2>Rents List</h2>
     </section>
   );

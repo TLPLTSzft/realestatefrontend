@@ -1,6 +1,6 @@
 function SaleForm(props) {
   return (
-    <section id="saleform">
+    <section id="saleForm">
       <h2>Sale Form</h2>
     </section>
   );

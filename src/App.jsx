@@ -12,6 +12,7 @@ import { useState } from "react";
 
 function App() {
   const [realestates, setRealestates] = useState([]);
+  const [realestateEditId, setRealestateEditId] = useState(0);
   const realestatesList = () => {
     fetch("http://localhost:8000/api/realestate", {
       headers: {
@@ -26,25 +27,39 @@ function App() {
       }
     });
   };
+
   return (
     <>
       <Nav
         navItems={[
-          // { href: "#realestateslist", target: "", displayText: "Realestates List" },
+          // {
+          //   href: "#realestatesList",
+          //   target: "",
+          //   displayText: "Realestates List",
+          // },
           {
-            href: "#realestateform",
+            href: "#realestateForm",
             target: "",
-            displayText: "Realestate Form",
+            displayText: "Realestate New",
           },
-          { href: "#rentslist", target: "_blank", displayText: "Rents List" },
-          { href: "#rentform", target: "_blank", displayText: "Rent Form" },
-          { href: "#saleslist", target: "_blank", displayText: "Sales List" },
-          { href: "#saleform", target: "_blank", displayText: "Sale Form" },
+          // { href: "/rentsList", target: "_blank", displayText: "Rents List" },
+          // { href: "/rentForm", target: "_blank", displayText: "Rent Form" },
+          // { href: "/salesList", target: "_blank", displayText: "Sales List" },
+          // { href: "/saleForm", target: "_blank", displayText: "Sale Form" },
         ]}
       />
+
       <main className="container">
-        <RealestatesList onMount={realestatesList} realestates={realestates} />
-        <RealestateForm onSuccess={realestatesList} />
+        <RealestatesList
+          onMount={realestatesList}
+          realestates={realestates}
+          realestateEdit={(id) => setRealestateEditId(id)}
+        />
+        <RealestateForm
+          onSuccess={realestatesList}
+          realestateEditId={realestateEditId}
+          realestateEditIdReset={() => setRealestateEditId(0)}
+        />
         {/* <RentsList />
         <RentForm />
         <SalesList />

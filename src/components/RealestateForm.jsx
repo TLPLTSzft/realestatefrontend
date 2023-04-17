@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RealestateFormInput from "./RealestateFormInput";
-import RealestatesList from "./RealestatesList";
 
 function RealestateForm(props) {
-  const { onSuccess } = props;
+  const { onSuccess, realestateEditId = 0, realestateEditIdReset } = props;
   const [realestate_code, setRealestate_code] = useState("");
   const [address, setAddress] = useState("");
   const [room, setRoom] = useState("");
@@ -13,7 +12,62 @@ function RealestateForm(props) {
   const [description, setDescription] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const realestateAdds = () => {
+  useEffect(() => {
+    if (realestateEditId === 0) {
+      realestateFormReset();
+    } else {
+      fetch(`http://localhost:8000/api/realestate/${realestateEditId}`, {
+        headers: {
+          Accept: "application/json",
+        },
+      }).then(async (Response) => {
+        const data = await Response.json();
+        if (Response.status !== 200) {
+          alert(data.message);
+        } else {
+          setRealestate_code(data.realestate_code);
+          setAddress(data.address);
+          setRoom(data.room);
+          setFurnishing(data.furnishing);
+          setRental_fee(data.rental_fee);
+          setSale_price(data.sale_price);
+          setDescription(data.description);
+        }
+      });
+    }
+  }, [realestateEditId]);
+
+  const realestateEdit = () => {
+    const realestate = {
+      realestate_code: realestate_code,
+      address: address,
+      room: room,
+      furnishing: furnishing,
+      rental_fee: rental_fee,
+      sale_price: sale_price,
+      description: description,
+    };
+    fetch(`http://localhost:8000/api/realestate/${realestateEditId}`, {
+      method: "PUT",
+      body: JSON.stringify(realestate),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }).then(async (Response) => {
+      if (Response.status === 200) {
+        onSuccess();
+        realestateEditIdReset();
+      } else {
+        const jsonData = await Response.json();
+        alert(jsonData.message);
+        const errorMessage = jsonData.message;
+        setErrorMessage(errorMessage);
+      }
+    });
+  };
+
+  const realestateNew = () => {
     const realestate = {
       realestate_code: realestate_code,
       address: address,
@@ -33,24 +87,36 @@ function RealestateForm(props) {
     }).then(async (Response) => {
       if (Response.status === 201) {
         onSuccess();
-        setRealestate_code("");
-        setAddress("");
-        setRoom("");
-        setFurnishing("");
-        setRental_fee("");
-        setSale_price("");
-        setDescription("");
-        setErrorMessage("");
+        realestateFormReset();
       } else {
         const jsonData = await Response.json();
+        alert(jsonData.message);
         const errorMessage = jsonData.message;
         setErrorMessage(errorMessage);
       }
     });
   };
+
+  const realestateFormReset = () => {
+    setRealestate_code("");
+    setAddress("");
+    setRoom("");
+    setFurnishing("");
+    setRental_fee("");
+    setSale_price("");
+    setDescription("");
+    setErrorMessage("");
+  };
+
   return (
-    <section id="realestateform" className="py-4">
-      <h2>Realestate Form</h2>
+    <section id="realestateForm" className="py-4">
+      {realestateEditId === 0 ? (
+        <h2>Realestate New</h2>
+      ) : (
+        <h2>{realestate_code} - Realestate Edit</h2>
+      )}
+
+      {/*
       {errorMessage !== "" ? (
         <div>
           <div
@@ -70,11 +136,17 @@ function RealestateForm(props) {
       ) : (
         ""
       )}
+      */}
+
       <form
         name="realestateFormName"
         onSubmit={(event) => {
           event.preventDefault();
-          realestateAdds();
+          if (realestateEditId === 0) {
+            realestateNew();
+          } else {
+            realestateEdit();
+          }
         }}
       >
         <RealestateFormInput
@@ -82,6 +154,7 @@ function RealestateForm(props) {
           inputLabel={"Realestate Code"}
           value={realestate_code}
           setValue={setRealestate_code}
+          disabledTF={realestateEditId !== 0 ? true : false}
         />
         <RealestateFormInput
           name="addressName"
@@ -104,9 +177,7 @@ function RealestateForm(props) {
           value={furnishing}
           setValue={setFurnishing}
         />
-
         {/* <div className="row col-md-11 col-lg-10 my-3"> */}
-
         {/*
           <div className="col-md-4 text-end">
             <label htmlFor="furnishingInput" className="form-label">
@@ -114,9 +185,7 @@ function RealestateForm(props) {
             </label>
           </div>
           */}
-
         {/* <div className="col-md-7 col-lg-6"> */}
-
         {/*
             <select
               inputId={"furnishingInput"}
@@ -136,7 +205,6 @@ function RealestateForm(props) {
               <option>Hatodik választás</option>
             </select>
             */}
-
         {/* 
             <select
               name="furnishingName"
@@ -158,11 +226,8 @@ function RealestateForm(props) {
             const setValue={document.getElementById(furnishing)}
             {alert(document.getElementsByName("furnishingName"))}
             */}
-
         {/* </div> */}
-
         {/* </div> */}
-
         <RealestateFormInput
           inputId={"rental_feeInput"}
           inputLabel={"Rental fee"}
@@ -185,18 +250,30 @@ function RealestateForm(props) {
         />
         <div className="row col-13 col-sm-13 col-md-9 col-lg-10 col-xl-10 pt-2">
           <div className="col-6 col-sm-6 col-md-5 col-lg-4 col-xl-4 ps-1 pe-2 text-end">
-            <button
-              className="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-5 btn btn-outline-warning"
-              type="submit"
-            >
-              Adds
-              {/* Modifies */}
-            </button>
+            {realestateEditId === 0 ? (
+              <button
+                className="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-5 btn btn-outline-success"
+                type="submit"
+              >
+                Adds
+              </button>
+            ) : (
+              <button
+                className="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-5 btn btn-outline-warning"
+                type="submit"
+              >
+                Modifies
+              </button>
+            )}
           </div>
           <div className="col-6 col-sm-6 col-md-5 col-lg-4 col-xl-4 ps-2 pe-1">
             <button
               className="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-5 btn btn-outline-danger"
-              type="submit"
+              type="reset"
+              onClick={() => {
+                realestateFormReset();
+                realestateEditIdReset();
+              }}
             >
               Reset
             </button>

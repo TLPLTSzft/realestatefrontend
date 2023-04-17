@@ -1,6 +1,6 @@
 function RentForm(props) {
   return (
-    <section id="rentform">
+    <section id="rentForm">
       <h2>Rent Form</h2>
     </section>
   );

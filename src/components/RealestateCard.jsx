@@ -1,5 +1,5 @@
 function RealestateCard(props) {
-  const { realestate } = props;
+  const { realestate, afterDelete, realestateEdit } = props;
   const {
     id,
     realestate_code,
@@ -10,6 +10,23 @@ function RealestateCard(props) {
     sale_price,
     description,
   } = realestate;
+
+  const realestateDelete = () => {
+    fetch(`http://localhost:8000/api/realestate/${id}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+      },
+    }).then(async (Response) => {
+      if (Response.status === 500) {
+        alert("Cannot delete a parent row: a foreign key constraint fails");
+      } else if (Response.status !== 204) {
+        const data = await Response.json();
+        alert(data.message);
+      }
+      afterDelete();
+    });
+  };
 
   return (
     <div className="col-md-9 col-lg-6">
@@ -27,6 +44,7 @@ function RealestateCard(props) {
             className="img-fluid  px-0 py-2"
           />
         </div>
+
         <div className="card-body px-2 py-2">
           <table className="table table-hover text-start">
             <tbody>
@@ -61,13 +79,29 @@ function RealestateCard(props) {
             </tbody>
           </table>
         </div>
+
         <div className="card-footer">
           <div className="row row-cols-2 p-2">
             <div className="row-cols-1 ps-1 pe-2">
-              <button className="btn btn-outline-warning">Edit</button>
+              <a
+                href="#realestateForm"
+                className="btn btn-outline-warning"
+                onClick={() => {
+                  realestateEdit(id);
+                }}
+              >
+                Edit
+              </a>
             </div>
             <div className="row-cols-1 ps-2 pe-1">
-              <button className="btn btn-outline-danger">Delete</button>
+              <button
+                className="btn btn-outline-danger"
+                onClick={() => {
+                  realestateDelete();
+                }}
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
