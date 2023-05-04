@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import localhost from "../Localhost";
+import furnishings from "../Furnishings";
 import RealestateFormInput from "./RealestateFormInput";
 
 function RealestateForm(props) {
@@ -6,17 +8,36 @@ function RealestateForm(props) {
   const [realestate_code, setRealestate_code] = useState("");
   const [address, setAddress] = useState("");
   const [room, setRoom] = useState("");
-  const [furnishing, setFurnishing] = useState("");
+  const [furnishing_id, setFurnishing_id] = useState("");
   const [rental_fee, setRental_fee] = useState("");
   const [sale_price, setSale_price] = useState("");
   const [description, setDescription] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const furnishingSelectOptions = [];
+
+  for (const key in furnishings) {
+    if (Object.hasOwnProperty.call(furnishings, key)) {
+      const furnishingOption = furnishings[key];
+      // if (furnishing_id == { key }) {
+      furnishingSelectOptions.push(
+        <option value={key}>{furnishingOption}</option>
+      );
+      // } else {
+      // furnishingSelectOptions.push(
+      // <option value={key}>
+      // {furnishingOption}
+      // </option>
+      // );
+      // }
+    }
+  }
 
   useEffect(() => {
     if (realestateEditId === 0) {
       realestateFormReset();
     } else {
-      fetch(`http://localhost:8000/api/realestate/${realestateEditId}`, {
+      fetch(`http://${localhost}:8000/api/realestates/${realestateEditId}`, {
+        // fetch(`http://localhost:8000/api/realestates/${realestateEditId}`, {
         headers: {
           Accept: "application/json",
         },
@@ -28,7 +49,7 @@ function RealestateForm(props) {
           setRealestate_code(data.realestate_code);
           setAddress(data.address);
           setRoom(data.room);
-          setFurnishing(data.furnishing);
+          setFurnishing_id(data.furnishing_id);
           setRental_fee(data.rental_fee);
           setSale_price(data.sale_price);
           setDescription(data.description);
@@ -42,12 +63,13 @@ function RealestateForm(props) {
       realestate_code: realestate_code,
       address: address,
       room: room,
-      furnishing: furnishing,
+      furnishing_id: furnishing_id,
       rental_fee: rental_fee,
       sale_price: sale_price,
       description: description,
     };
-    fetch(`http://localhost:8000/api/realestate/${realestateEditId}`, {
+    fetch(`http://${localhost}:8000/api/realestates/${realestateEditId}`, {
+      // fetch(`http://localhost:8000/api/realestates/${realestateEditId}`, {
       method: "PUT",
       body: JSON.stringify(realestate),
       headers: {
@@ -72,12 +94,13 @@ function RealestateForm(props) {
       realestate_code: realestate_code,
       address: address,
       room: room,
-      furnishing: furnishing,
+      furnishing_id: furnishing_id,
       rental_fee: rental_fee,
       sale_price: sale_price,
       description: description,
     };
-    fetch("http://localhost:8000/api/realestate", {
+    fetch(`http://${localhost}:8000/api/realestates`, {
+      // fetch("http://localhost:8000/api/realestates", {
       method: "POST",
       body: JSON.stringify(realestate),
       headers: {
@@ -101,7 +124,7 @@ function RealestateForm(props) {
     setRealestate_code("");
     setAddress("");
     setRoom("");
-    setFurnishing("");
+    setFurnishing_id("");
     setRental_fee("");
     setSale_price("");
     setDescription("");
@@ -115,29 +138,6 @@ function RealestateForm(props) {
       ) : (
         <h2>{realestate_code} - Realestate Edit</h2>
       )}
-
-      {/*
-      {errorMessage !== "" ? (
-        <div>
-          <div
-            className="alert alert-warning alert-dismissible fade show"
-            role="alert"
-          >
-            {errorMessage}
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-              onClick={() => setErrorMessage("")}
-            ></button>
-          </div>
-        </div>
-      ) : (
-        ""
-      )}
-      */}
-
       <form
         name="realestateFormName"
         onSubmit={(event) => {
@@ -170,64 +170,74 @@ function RealestateForm(props) {
           value={room}
           setValue={setRoom}
         />
-        <RealestateFormInput
+        {/* <RealestateFormInput
           inputId={"furnishingInput"}
           inputLabel={"Furnishing"}
           inputType={"number"}
           value={furnishing}
           setValue={setFurnishing}
-        />
-        {/* <div className="row col-md-11 col-lg-10 my-3"> */}
-        {/*
-          <div className="col-md-4 text-end">
-            <label htmlFor="furnishingInput" className="form-label">
-              Furnishing
+        /> */}
+        <div className="row col-md-11 col-lg-10 my-3">
+          <div className="col-md-4 ps-1 pe-2 text-end">
+            {/* <div className="col-md-4 text-end"> */}
+            <label htmlFor="furnishingId" className="form-label">
+              {/* <label htmlFor="furnishingInput" className="form-label"> */}
+              {/* <label htmlFor="furnishingName" className="form-label"> */}
+              Furnishing ID
             </label>
           </div>
-          */}
-        {/* <div className="col-md-7 col-lg-6"> */}
-        {/*
-            <select
-              inputId={"furnishingInput"}
-              name="d"
-              onChange={alert(
-                document.c.d.options[document.c.d.selectedIndex].text
-                // document.c.d.selectedIndex
-                // document.c.d.options[2].text
-                // document.c.d.options[2].value
-              )}
-            >
-              <option value="egy">Első választás</option>
-              <option value="ketto">Második választás</option>
-              <option value="harom">Harmadik választás</option>
-              <option>Negyedik választás</option>
-              <option>Ötödik választás</option>
-              <option>Hatodik választás</option>
-            </select>
-            */}
-        {/* 
+          <div className="col-md-7 col-lg-6 ps-2 pe-1">
             <select
               name="furnishingName"
               id="furnishingId"
               className="form-select"
-              // value={parseInt(furnishing)}
-              // setValue={parseInt(furnishing)}
-              // value={furnishing}
-              // setValue={furnishing}
-              // onSelect={(event) => value(event.target.value)}
-              // onInput={(event) => setValue(event.target.value)}
-              // aria-label="Default select example"
+              onChange={(event) => setFurnishing_id(event.target.value)}
+              aria-label="Default select example"
             >
-              <option>Choose from the drop-down list</option>
-              <option value="1">without furniture</option>
-              <option value="2">basic equipment</option>
-              <option value="3">fully furnished</option>
+              {/* <option>Choose from the drop-down list</option> */}
+              {furnishingSelectOptions}
+              {/* <option value="1">without furniture</option> */}
+              {/* <option value="2">basic equipment</option> */}
+              {/* <option value="3">fully furnished</option> */}
             </select>
-            const setValue={document.getElementById(furnishing)}
-            {alert(document.getElementsByName("furnishingName"))}
-            */}
-        {/* </div> */}
-        {/* </div> */}
+          </div>
+        </div>
+        {/* <div className="col-md-7 col-lg-6">
+          <select
+            inputId={"furnishingInput"}
+            name="d"
+            onChange={alert(
+              document.c.d.options[document.c.d.selectedIndex].text
+              // document.c.d.selectedIndex
+              // document.c.d.options[2].text
+              // document.c.d.options[2].value
+            )}
+          >
+            <option value="egy">Első választás</option>
+            <option value="ketto">Második választás</option>
+            <option value="harom">Harmadik választás</option>
+            <option>Negyedik választás</option>
+            <option>Ötödik választás</option>
+            <option>Hatodik választás</option>
+          </select>
+        </div> */}
+        {/* <select
+          name="furnishingName"
+          id="furnishingId"
+          className="form-select"
+          // value={furnishing}
+          // setValue={furnishing}
+          // onSelect={(event) => value(event.target.value)}
+          // onInput={(event) => setValue(event.target.value)}
+          // aria-label="Default select example"
+        >
+          <option>Choose from the drop-down list</option>
+          <option value="1">without furniture</option>
+          <option value="2">basic equipment</option>
+          <option value="3">fully furnished</option>
+        </select>
+        const setValue={document.getElementById(furnishing)}
+        {alert(document.getElementsByName("furnishingName"))} */}
         <RealestateFormInput
           inputId={"rental_feeInput"}
           inputLabel={"Rental fee"}

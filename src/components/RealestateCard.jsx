@@ -1,3 +1,6 @@
+import localhost from "../Localhost";
+import furnishings from "../Furnishings";
+
 function RealestateCard(props) {
   const { realestate, afterDelete, realestateEdit } = props;
   const {
@@ -5,14 +8,15 @@ function RealestateCard(props) {
     realestate_code,
     address,
     room,
-    furnishing,
+    furnishing_id,
     rental_fee,
     sale_price,
     description,
   } = realestate;
 
   const realestateDelete = () => {
-    fetch(`http://localhost:8000/api/realestate/${id}`, {
+    fetch(`http://${localhost}:8000/api/realestates/${id}`, {
+      // fetch(`http://localhost:8000/api/realestates/${id}`, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
@@ -29,7 +33,7 @@ function RealestateCard(props) {
   };
 
   return (
-    <div className="col-md-9 col-lg-6">
+    <div className="col-md-9 col-lg-6 col-xl-4">
       <div className="card h-100">
         <div className="card-header text-bg-light">
           <div className="row">
@@ -38,9 +42,9 @@ function RealestateCard(props) {
           </div>
           <img
             src={`image/${id}.jpg`}
+            // src="https://loremflickr.com/640/480/building?random=10"
             alt={`${id}.jpg`}
             title={`${id}`}
-            // src="https://loremflickr.com/640/480/building?random=10"
             className="img-fluid  px-0 py-2"
           />
         </div>
@@ -58,11 +62,7 @@ function RealestateCard(props) {
               </tr>
               <tr>
                 <th>Furnishing</th>
-                <td>{furnishing}</td>
-                {/* <td>
-                  @if ({furnishing}==1)<p>egy</p>@else<p>harom</p>
-                  @endif
-                </td> */}
+                <td>{furnishings[furnishing_id]}</td>
               </tr>
               <tr>
                 <th>Rental fee</th>

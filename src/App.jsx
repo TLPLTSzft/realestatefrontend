@@ -1,20 +1,22 @@
 import Nav from "./components/Nav";
 import RealestatesList from "./components/RealestatesList";
 import RealestateForm from "./components/RealestateForm";
-import RentsList from "./components/RentsList";
-import RentForm from "./components/RentForm";
-import SalesList from "./components/SalesList";
-import SaleForm from "./components/SaleForm";
+// import RentalsList from "./components/RentalsList";
+// import RentalForm from "./components/RentalForm";
+// import SalesList from "./components/SalesList";
+// import SaleForm from "./components/SaleForm";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import { useState } from "react";
+import localhost from "./Localhost";
 
 function App() {
   const [realestates, setRealestates] = useState([]);
   const [realestateEditId, setRealestateEditId] = useState(0);
   const realestatesList = () => {
-    fetch("http://localhost:8000/api/realestate", {
+    fetch(`http://${localhost}:8000/api/realestates`, {
+      // fetch(`http://localhost:8000/api/realestates`, {
       headers: {
         Accept: "application/json",
       },
@@ -42,8 +44,8 @@ function App() {
             target: "",
             displayText: "Realestate New",
           },
-          // { href: "/rentsList", target: "_blank", displayText: "Rents List" },
-          // { href: "/rentForm", target: "_blank", displayText: "Rent Form" },
+          // { href: "/RentalsList", target: "_blank", displayText: "Rentals List" },
+          // { href: "/RentalForm", target: "_blank", displayText: "Rental Form" },
           // { href: "/salesList", target: "_blank", displayText: "Sales List" },
           // { href: "/saleForm", target: "_blank", displayText: "Sale Form" },
         ]}
@@ -60,8 +62,8 @@ function App() {
           realestateEditId={realestateEditId}
           realestateEditIdReset={() => setRealestateEditId(0)}
         />
-        {/* <RentsList />
-        <RentForm />
+        {/* <RentalsList />
+        <RentalForm />
         <SalesList />
         <SaleForm /> */}
       </main>
